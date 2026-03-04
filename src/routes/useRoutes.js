@@ -9,46 +9,45 @@ const userController = require("../controllers/userController");
  *     User:
  *       type: object
  *       required:
- *         - name
+ *         - nome
  *         - email
+ *         - senha
  *       properties:
  *         id:
  *           type: integer
- *           description: ID gerado automaticamente do usuário
- *         name:
+ *           description: ID do usuário
+ *         nome:
  *           type: string
  *           description: Nome do usuário
  *         email:
  *           type: string
- *           description: E-mail do usuário
+ *           description: Email do usuário
+ *         senha:
+ *           type: string
+ *           description: Senha do usuário
  *       example:
- *         name: Carlos Almeida
- *         email: carlos@email.com
+ *         nome: Gustavo
+ *         email: gustavo@email.com
+ *         senha: 123456
  */
 
 /**
  * @swagger
  * /api/users:
  *   get:
- *     summary: Retorna a lista de todos os usuários
+ *     summary: Lista todos os usuários
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: Lista de usuários obtida com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
+ *         description: Lista retornada com sucesso
  */
 router.get("/", userController.getUsers);
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/register:
  *   post:
- *     summary: Cria um novo usuário
+ *     summary: Criar novo usuário
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -58,8 +57,31 @@ router.get("/", userController.getUsers);
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
- *         description: Usuário criado com sucesso
+ *         description: Usuário criado
  */
-router.post("/", userController.createUser);
+router.post("/register", userController.createUser);
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Login do usuário
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login realizado com sucesso
+ */
+router.post("/login", userController.login);
 
 module.exports = router;
