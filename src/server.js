@@ -12,10 +12,9 @@ const newsRoutes = require("./routes/newsRoutes");
 
 const app = express();
 const PORT = 3000;
-const cors = require("cors");
+const cors = require('cors')
 
-app.use(cors());
-app.use(express.json());
+app.use(cors()) 
 
 // Swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -47,7 +46,3 @@ app.listen(PORT, () => {
   console.log(`Swagger: http://localhost:${PORT}/api-docs`);
 }); 
 
-const cors = require('cors')
-const app = express()
-
-app.use(cors()) 
