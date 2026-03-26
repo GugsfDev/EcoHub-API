@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-const SECRET = "segredo_super_secreto";
+
+// Usa a variável de ambiente (se existir) ou o segredo padrão
+const SECRET = process.env.JWT_SECRET || "segredo_super_secreto";
 
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -10,13 +12,14 @@ const authMiddleware = (req, res, next) => {
     });
   }
 
+  // Pega apenas o código do token, ignorando a palavra "Bearer"
   const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, SECRET);
 
-    req.user = decoded; // dados do usuário no token
-    next();
+    req.user = decoded; // Salva os dados do usuário na requisição
+    next(); // Passa para o próximo passo (ou rota)
   } catch (error) {
     return res.status(401).json({
       erro: "Token inválido"
@@ -25,28 +28,3 @@ const authMiddleware = (req, res, next) => {
 };
 
 module.exports = authMiddleware;
-
-module.exports = (req, res, next) => {
-
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({ message: "Token não fornecido" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // aqui salvamos os dados do usuario
-    req.user = decoded;
-
-    next();
-
-  } catch (err) {
-    return res.status(401).json({ message: "Token inválido" });
-  }
-
-};

@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 
 const SECRET = "segredo_super_secreto";
 
+// ==========================================
 // LISTAR USUÁRIOS
+// ==========================================
 exports.getUsers = (req, res) => {
   db.query(
     "SELECT id, nome, email, data_criacao FROM users",
@@ -17,7 +19,9 @@ exports.getUsers = (req, res) => {
   );
 };
 
+// ==========================================
 // CRIAR USUÁRIO
+// ==========================================
 exports.createUser = async (req, res) => {
   try {
     const { nome, email, senha } = req.body;
@@ -34,7 +38,6 @@ exports.createUser = async (req, res) => {
 
     db.query(sql, [nome, email, senhaHash], (err, result) => {
       if (err) {
-        // ESSAS DUAS LINHAS SÃO A CHAVE:
         console.error("❌ ERRO NO BANCO DE DADOS:", err.message);
         console.error("Código do erro:", err.code);
         
@@ -56,7 +59,9 @@ exports.createUser = async (req, res) => {
   }
 };
 
+// ==========================================
 // LOGIN
+// ==========================================
 exports.login = (req, res) => {
   const { email, senha } = req.body;
 
@@ -83,8 +88,14 @@ exports.login = (req, res) => {
       });
     }
 
+    // AQUI ESTÁ A CORREÇÃO PRINCIPAL:
+    // Adicionamos 'tipo: user.tipo' para a permissão ir dentro do token!
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { 
+        id: user.id, 
+        email: user.email, 
+        tipo: user.tipo // <-- Salva se ele é 'admin' ou 'aluno'
+      },
       SECRET,
       { expiresIn: "1d" }
     );
@@ -95,7 +106,8 @@ exports.login = (req, res) => {
       usuario: {
         id: user.id,
         nome: user.nome,
-        email: user.email
+        email: user.email,
+        tipo: user.tipo // <-- Devolve o tipo na resposta também (boa prática)
       }
     });
   });
