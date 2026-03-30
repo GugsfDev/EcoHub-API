@@ -26,7 +26,6 @@ const swaggerDocument = {
     }
   },
   
-  // Aplica o cadeado a todas as rotas por padrão
   security: [
     {
       bearerAuth: []
@@ -48,7 +47,7 @@ const swaggerDocument = {
       post: {
         tags: ['Users'],
         summary: 'Criar novo usuário',
-        security: [], // <-- Rota pública, sem cadeado
+        security: [], 
         requestBody: {
           required: true,
           content: {
@@ -57,7 +56,7 @@ const swaggerDocument = {
                 type: 'object',
                 properties: {
                   nome: { type: 'string', example: 'Gustavo' },
-                  email: { type: 'string', example: 'gustavo@email.com' },
+                  email: { type: 'string', example: 'mauror@email.com' },
                   senha: { type: 'string', example: '123456' }
                 }
               }
@@ -74,7 +73,7 @@ const swaggerDocument = {
       post: {
         tags: ['Users'],
         summary: 'Login do usuário',
-        security: [], // <-- Rota pública, sem cadeado
+        security: [], 
         requestBody: {
           required: true,
           content: {
@@ -82,7 +81,7 @@ const swaggerDocument = {
               schema: {
                 type: 'object',
                 properties: {
-                  email: { type: 'string', example: 'gustavo@email.com' },
+                  email: { type: 'string', example: 'mauro@email.com' },
                   senha: { type: 'string', example: '123456' }
                 }
               }
@@ -108,7 +107,7 @@ const swaggerDocument = {
       post: {
         tags: ['Projects'],
         summary: 'Criar um novo projeto',
-        description: '**Permissão necessária:** `Admin`\n\nApenas administradores podem criar novos projetos.',
+        description: '**Permissão necessária:** `Admin`\\n\\nApenas administradores podem criar novos projetos.',
         requestBody: {
           required: true,
           content: {
@@ -135,7 +134,7 @@ const swaggerDocument = {
       delete: {
         tags: ['Projects'],
         summary: 'Deletar um projeto',
-        description: '**Permissão necessária:** `Admin`\n\nApenas administradores podem excluir projetos.',
+        description: '**Permissão necessária:** `Admin`\\n\\nApenas administradores podem excluir projetos.',
         parameters: [
           {
             name: 'id',
@@ -154,7 +153,7 @@ const swaggerDocument = {
     },
 
     // ==========================================
-    // ROTAS DE EVENTOS (EVENTS)
+    // ROTAS DE EVENTOS (EVENTS) - CORRIGIDO LOCAL
     // ==========================================
     '/api/events': {
       get: {
@@ -176,7 +175,7 @@ const swaggerDocument = {
                   titulo: { type: 'string', example: 'Mutirão de Limpeza' },
                   descricao: { type: 'string', example: 'Vamos limpar o parque municipal.' },
                   data: { type: 'string', format: 'date', example: '2026-04-15' },
-                  local: { type: 'string', example: 'Parque Central' }
+                  local: { type: 'string', example: 'Parque Central' } 
                 }
               }
             }
@@ -213,7 +212,7 @@ const swaggerDocument = {
     },
 
     // ==========================================
-    // ROTAS DE NOTÍCIAS (NEWS)
+    // ROTAS DE NOTÍCIAS (NEWS) - CORRIGIDO RESUMO
     // ==========================================
     '/api/news': {
       get: {
@@ -233,6 +232,7 @@ const swaggerDocument = {
                 type: 'object',
                 properties: {
                   titulo: { type: 'string', example: 'Nova lei ambiental aprovada' },
+                  resumo: { type: 'string', example: 'A câmara aprovou hoje novas diretrizes ambientais.' },
                   conteudo: { type: 'string', example: 'A câmara aprovou hoje a nova lei que...' }
                 }
               }
@@ -324,8 +324,67 @@ const swaggerDocument = {
           '403': { description: 'Acesso negado (Requer Admin)' }
         }
       }
+    },
+
+    // ==========================================
+    // NOVAS ROTAS (Comments, Likes, Notifications)
+    // ==========================================
+    '/api/comments': {
+      post: {
+        tags: ['Comments'],
+        summary: 'Adicionar comentário em um post',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  post_id: { type: 'integer', example: 1 },
+                  texto: { type: 'string', example: 'Muito legal esse projeto!' }
+                }
+              }
+            }
+          }
+        },
+        responses: { '201': { description: 'Comentário criado' } }
+      }
+    },
+    '/api/likes/toggle': {
+      post: {
+        tags: ['Likes'],
+        summary: 'Curte ou remove curtida (Toggle)',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  post_id: { type: 'integer', example: 1 }
+                }
+              }
+            }
+          }
+        },
+        responses: { '200': { description: 'Sucesso' } }
+      }
+    },
+    '/api/notifications': {
+      get: {
+        tags: ['Notifications'],
+        summary: 'Listar notificações do usuário',
+        responses: { '200': { description: 'Sucesso' } }
+      }
+    },
+    '/api/notifications/read': {
+      put: {
+        tags: ['Notifications'],
+        summary: 'Marcar todas as notificações como lidas',
+        responses: { '200': { description: 'Sucesso' } }
+      }
     }
-  }
+  } 
 };
 
 module.exports = swaggerDocument;
