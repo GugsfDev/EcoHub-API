@@ -95,3 +95,13 @@ CREATE TABLE news (
     imagem_url VARCHAR(255),
     data_publicacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+--10. Tabela de Seguidores (para o sistema de seguir usuários)
+CREATE TABLE IF NOT EXISTS seguidores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  seguidor_id INT NOT NULL,
+  seguindo_id INT NOT NULL,
+  data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unico_seguir (seguidor_id, seguindo_id),
+  CONSTRAINT fk_seguidor FOREIGN KEY (seguidor_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_seguindo FOREIGN KEY (seguindo_id) REFERENCES users(id) ON DELETE CASCADE
+);
